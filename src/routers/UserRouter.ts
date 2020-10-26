@@ -13,6 +13,10 @@ class UserRouter{
         this.deleteRoutes();
     }
     getRoutes(){
+        this.router.get('/send/verification/email', 
+            UserValidators.resendVerificationEmail(), 
+            UserController.resendVerificationEmail
+        )
     }
     postRoutes(){
         this.router.post('/signup', 

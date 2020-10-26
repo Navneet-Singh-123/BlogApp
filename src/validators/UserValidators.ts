@@ -1,5 +1,5 @@
 import bodyParser = require('body-parser');
-import {body} from 'express-validator'
+import {body, query} from 'express-validator'
 import User from '../models/User'
 
 export class UserValidators {
@@ -8,7 +8,6 @@ export class UserValidators {
             body('email', 'Email is Required')
                 .isEmail()
                 .custom((email, {req}) => {
-                    console.log(req.body);
                    return User.findOne({email: email}).then(user=>{
                         if(user){
                             throw new Error("User already exists");
@@ -29,6 +28,12 @@ export class UserValidators {
         return [
             body('verification_token', 'Verification Toekn is Required').isNumeric(), 
             body('email', 'Email is Required').isEmail()
+        ]
+    }
+
+    static resendVerificationEmail(){
+        return [
+            query('email').isEmail()
         ]
     }
 }
