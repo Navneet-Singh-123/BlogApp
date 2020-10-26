@@ -23,6 +23,19 @@ const userSchema = new mongoose.Schema({
         type: Date, 
         required: true, 
         default: new Date()
+    }, 
+    verified: {
+        type: Boolean,
+        required: true, 
+        default: false
+    }, 
+    verification_token: {
+        type: Number, 
+        required: true
+    }, 
+    verification_token_time: {
+        type: Date, 
+        required: true
     }
 })
 
