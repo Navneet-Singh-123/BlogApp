@@ -111,4 +111,20 @@ export class UserController{
             next(e);
         }
     }
+
+    static async updatePassword(req, res, next){
+        const user_id = req.user.user_id;
+        const password = req.body.password;
+        const newPassword = req.body.new_password;
+        try{
+            User.findOne({_id: user_id}).then(async (user: any)=>{
+                await Utils.comparePassword({plainPassword: password , encryptedPassword: user.password});
+                const encryptedPassword = await Utils.encryptPassword(newPassword);
+                const newUser = await User.findOneAndUpdate({_id: user._id}, {password: encryptedPassword}, {new: true});
+                res.send(newUser);
+            })
+        }catch(e){
+            next(e);    
+        }
+    }
 }

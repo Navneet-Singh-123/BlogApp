@@ -32,11 +32,17 @@ class UserRouter{
     }
     patchRoutes(){
         this.router.patch('/verify', 
-            UserValidators.verifyUser,
+            UserValidators.verifyUser(),
             GlobalMiddleware.checkError,
             GlobalMiddleware.authenticate,
             UserController.verify
         );
+        this.router.patch('/update/password', 
+            UserValidators.updatePassword(), 
+            GlobalMiddleware.checkError, 
+            GlobalMiddleware.authenticate, 
+            UserController.updatePassword
+        )
     }
     deleteRoutes(){
 

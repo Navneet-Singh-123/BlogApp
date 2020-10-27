@@ -20,6 +20,7 @@ export class Server{
     }
     setMongodb(){
         const databaseURL = getEnvironmentVariables().db_url;
+        mongoose.set('useFindAndModify', false);
         mongoose.connect(databaseURL, 
         {useNewUrlParser: true, useUnifiedTopology: true})
         .then(()=>{
