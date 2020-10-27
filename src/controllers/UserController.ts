@@ -43,7 +43,7 @@ export class UserController{
 
     static async verify(req, res, next){
         const verificationToken = req.body.verification_token;
-        const email = req.body.email;
+        const email = req.user.email;
         try{
             const user = await User.findOneAndUpdate({
                 email: email, 
@@ -63,7 +63,7 @@ export class UserController{
 
 
     static async resendVerificationEmail(req, res, next){
-        const email = req.query.email;
+        const email = req.user.email;
         const verificationToken = Utils.generateVerificationToken()
         try{
             const user: any = await User.findOneAndUpdate({email: email}, {

@@ -14,8 +14,7 @@ class UserRouter{
     }
     getRoutes(){
         this.router.get('/send/verification/email', 
-            UserValidators.resendVerificationEmail(), 
-            GlobalMiddleware.checkError,
+            GlobalMiddleware.authenticate, 
             UserController.resendVerificationEmail
         )
         this.router.get('/login', 
