@@ -17,6 +17,7 @@ class UserRouter{
             UserValidators.resendVerificationEmail(), 
             UserController.resendVerificationEmail
         )
+        this.router.get('/test', UserController.test)
     }
     postRoutes(){
         this.router.post('/signup', 
