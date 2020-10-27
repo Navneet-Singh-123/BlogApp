@@ -2,31 +2,21 @@ import User from "../models/User";
 import {Utils} from '../utils/Utils'
 import { NodeMailer } from "../utils/NodeMailer";
 import * as Bcrypt from 'bcrypt'
+import * as Jwt from 'jsonwebtoken'
+import { getEnvironmentVariables } from "../environments/env";
 
 export class UserController{
 
-
-    private static async encryptPassword(req, res, next){
-        return new Promise((resolve, reject)=>{
-            Bcrypt.hash(req.body.password, 10, (err, hash)=>{
-                if(err){
-                    reject(err);
-                }
-                else{
-                    resolve(hash);
-                }
-            })
-        })
-    }
 
     static async signUp(req, res, next){
         const email = req.body.email;
         const username = req.body.username;
         const verificationToken = Utils.generateVerificationToken();
+        const password = req.body.password
 
         try{
 
-            const hash = await UserController.encryptPassword(req, res, next);
+            const hash = await Utils.encryptPassword(password);
 
             const data = {
                 email: email, 
@@ -104,5 +94,21 @@ export class UserController{
                 res.send(same);
             })
         })
+    }
+
+    static async login(req, res, next){
+        const password = req.query.password;
+        const user = req.user;
+        try{
+            await Utils.comparePassword({plainPassword: password, encryptedPassword: user.password});
+            const token = Jwt.sign({email: user.email, user_id: user._id}, getEnvironmentVariables().jwt_secret, {expiresIn: '120d'});
+            const data = {
+                user: user, 
+                token: token
+            }
+            res.json(data)
+        }catch(e){
+            next(e);
+        }
     }
 }

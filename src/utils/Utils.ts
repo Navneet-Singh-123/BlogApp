@@ -1,3 +1,5 @@
+import * as Bcrypt from 'bcrypt'
+
 export class Utils{
 
     public MAX_TOKEN_TIME = 60000;
@@ -9,5 +11,34 @@ export class Utils{
             otp += digits[Math.floor(Math.random()*10)];
         }
         return parseInt(otp);
+    }
+
+    static encryptPassword(password: string): Promise<any>{
+        return new Promise((resolve, reject)=>{
+            Bcrypt.hash(password, 10, (err, hash)=>{
+                if(err){
+                    reject(err);
+                }
+                else{
+                    resolve(hash);
+                }
+            })
+        })
+    }
+    
+    static async comparePassword(password: {plainPassword: string, encryptedPassword: string}): Promise<any>{
+        return new Promise((resolve, reject)=>{
+            Bcrypt.compare(password.plainPassword, password.encryptedPassword, ((err, isSame)=>{
+                if(err){
+                    reject(err);
+                }
+                else if(!isSame){
+                    reject(new Error('User & Password does not match'));
+                }
+                else{
+                    resolve(true);
+                }
+            }))
+        })
     }
 }
