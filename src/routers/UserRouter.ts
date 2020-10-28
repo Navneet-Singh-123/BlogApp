@@ -1,6 +1,7 @@
 import {Router} from 'express';
 import { UserController } from '../controllers/UserController';
 import { GlobalMiddleware } from '../middlewares/CheckError';
+import { Utils } from '../utils/Utils';
 import { UserValidators } from '../validators/UserValidators';
 
 class UserRouter{
@@ -57,6 +58,13 @@ class UserRouter{
             UserValidators.resetPassword(), 
             GlobalMiddleware.checkError, 
             UserController.resetPassword
+        )
+        this.router.patch('/update/profilePic', 
+            GlobalMiddleware.authenticate,
+            new Utils().multer.single('profile_pic'), 
+            UserValidators.updateProfilePic(), 
+            GlobalMiddleware.checkError, 
+            UserController.updateProfilePic
         )
     }
     deleteRoutes(){

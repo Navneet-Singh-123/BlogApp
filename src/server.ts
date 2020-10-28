@@ -31,6 +31,7 @@ export class Server{
         this.app.use(bodyParser.urlencoded({extended: true}))
     }
     setRoutes(){
+        this.app.use('/src/uploads', express.static('src/uploads'));
         this.app.use('/api/user', UserRouter)
     }
     error404Handler(){

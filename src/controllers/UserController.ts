@@ -4,9 +4,21 @@ import { NodeMailer } from "../utils/NodeMailer";
 import * as Bcrypt from 'bcrypt'
 import * as Jwt from 'jsonwebtoken'
 import { getEnvironmentVariables } from "../environments/env";
+import { truncate } from "fs";
 
 export class UserController{
 
+
+    static async updateProfilePic(req, res, next){
+        const userId= req.user.user_id;
+        const fileUrl = 'http://localhost:5000/' + req.file.path;
+        try{
+            const user = await User.findOneAndUpdate({_id: userId}, {updated_at: new Date(), profile_pic_url: fileUrl}, {new: true})
+            res.send(user);
+        }catch(e){
+            next(e);
+        }
+    }
 
     static async signUp(req, res, next){
         const email = req.body.email;

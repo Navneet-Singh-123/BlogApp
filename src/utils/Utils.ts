@@ -4,17 +4,26 @@ import * as Multer from 'multer'
 const storageOptions = 
     Multer.diskStorage({
         destination: function(req, file, cb){
-            cb(null, '/uploads');
+            cb(null, './src/uploads');
         }, 
         filename: function (req, file, cb) {
-            cb(null, file.fieldname + file.mimetype)
+            cb(null, file.originalname)
         }
     });
+
+const fileFilter = (req, file, cb)=>{
+    if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
+        cb(null, true);
+    } 
+    else{
+        cb(null, false);
+    }
+}
 
 export class Utils{
 
     public MAX_TOKEN_TIME = 60000;
-    public multer = Multer({storage: storageOptions});
+    public multer = Multer({storage: storageOptions, fileFilter: fileFilter});
 
     static generateVerificationToken(size: number = 5){
         let digits = '0123456789';
