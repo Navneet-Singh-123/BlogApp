@@ -11,7 +11,7 @@ export class UserController{
 
     static async updateProfilePic(req, res, next){
         const userId= req.user.user_id;
-        const fileUrl = 'http://localhost:5000/' + req.file.path;
+        const fileUrl = 'http://localhost:5000/' + req.file.path.replace(/\\/g,"/");
         try{
             const user = await User.findOneAndUpdate({_id: userId}, {updated_at: new Date(), profile_pic_url: fileUrl}, {new: true})
             res.send(user);
