@@ -22,6 +22,16 @@ class UserRouter{
             GlobalMiddleware.checkError,  
             UserController.login
         )
+        this.router.get('/reset/password', 
+            UserValidators.sendResetPasswordEmail(), 
+            GlobalMiddleware.checkError,
+            UserController.sendResetPasswordEmail
+        )
+        this.router.get('/verify/resetPasswordToken', 
+            UserValidators.verifyResetPasswordToken(), 
+            GlobalMiddleware.checkError, 
+            UserController.verifyResetPasswordToken
+        )
     }
     postRoutes(){
         this.router.post('/signup', 
@@ -42,6 +52,11 @@ class UserRouter{
             GlobalMiddleware.checkError, 
             GlobalMiddleware.authenticate, 
             UserController.updatePassword
+        );
+        this.router.patch('/reset/password', 
+            UserValidators.resetPassword(), 
+            GlobalMiddleware.checkError, 
+            UserController.resetPassword
         )
     }
     deleteRoutes(){

@@ -71,4 +71,78 @@ export class UserValidators {
             })
         ]
     }
+
+    static sendResetPasswordEmail(){
+        return [
+            query('email', 'Email is Required')
+            .isEmail()
+            .custom((email)=>{
+                return User.findOne({email: email}).then(user=>{
+                    if(user){
+                        return true;
+                    }
+                    else{
+                        throw new Error('Email does not Exist');
+                    }
+                })
+            })
+        ]
+    }
+
+    static verifyResetPasswordToken(){
+        return [
+            query('reset_password_token', 'Reset Password Token is Requried')
+            .isNumeric()
+            .custom((token, {req})=>{
+                return User.findOne({reset_password_token: token, reset_password_token_time: {$gt: Date.now()}})
+                .then(user=>{
+                    if(user){
+                        return true;
+                    }
+                    else{
+                        throw new Error('Token does not Exist. Please request for a new One.');
+                    }
+                })
+            })
+        ]
+    }
+
+    static resetPassword(){
+        return [
+            body('email', 'Email is Requried')
+            .isEmail()
+            .custom((email, {req})=>{
+                return User.findOne({email: email}).then(user=>{
+                    if(user){
+                        req.user = user;
+                        return true;
+                    }
+                    else{
+                        throw new Error('User does not exist');
+                    }
+                })
+            }),
+            body('new_password', 'New Password is Required')
+            .isAlphanumeric()
+            .custom((newPassword, {req})=>{
+                if(newPassword === req.body.confirm_password){
+                    return true;
+                }
+                else{
+                    throw new Error('Confirm Password and new Password does not match');
+                }
+            }), 
+            body('confirm_password', 'Confirm  Password is Required').isAlphanumeric(), 
+            body('reset_password_token', 'Reset Password Token is required').isNumeric()
+            .custom((token, {req})=>{
+                if(Number(req.user.reset_password_token) === Number(token)){
+                    return true;
+                }
+                else{
+                    req.errorStatus = 422;
+                    throw new Error('Reset Password Token is Invalid. Please Try Again');
+                }
+            })
+        ]
+    }
 }

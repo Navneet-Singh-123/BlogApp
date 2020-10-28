@@ -127,4 +127,42 @@ export class UserController{
             next(e);    
         }
     }
+
+    static async resetPassword(req, res, next){
+        const user = req.user;
+        const newPassword = req.body.new_password;
+        try{
+            const encryptedPassword = await Utils.encryptPassword(newPassword);
+            const updatedUser = await User.findOneAndUpdate({_id: user._id}, {updated_at: new Date(), password: encryptedPassword}, {new: true})
+            res.send(updatedUser);
+        } catch(e){
+            next(e);
+        }
+    }
+
+    static async sendResetPasswordEmail(req, res, next){
+        const email = req.query.email;
+        const resetPasswordToken = Utils.generateVerificationToken();
+        try{    
+            const updatedUser = await User.findOneAndUpdate({email: email}, 
+                {   updated_at: new Date(), 
+                    reset_password_token: resetPasswordToken, 
+                    reset_password_token_time: Date.now()+new Utils().MAX_TOKEN_TIME
+                }, {new: true})
+            res.send(updatedUser);
+            // await NodeMailer.sendEmail({
+            //     to: [email], 
+            //     subject: 'Reset Password Email', 
+            //     html: `<h1>${resetPasswordToken}</h1>`
+            // })
+        }catch(e){
+            next(e);
+        }
+    }
+
+    static verifyResetPasswordToken(req, res, next){
+        res.jsin({
+            success: true
+        })
+    }
 }
