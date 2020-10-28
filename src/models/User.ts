@@ -44,6 +44,10 @@ const userSchema = new mongoose.Schema({
     reset_password_token_time: {
         type: Date, 
         required: false 
+    }, 
+    profile_pic_url: {
+        type: String, 
+        required: true
     }
 })
 

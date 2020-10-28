@@ -1,8 +1,20 @@
 import * as Bcrypt from 'bcrypt'
+import * as Multer from 'multer'
+
+const storageOptions = 
+    Multer.diskStorage({
+        destination: function(req, file, cb){
+            cb(null, '/uploads');
+        }, 
+        filename: function (req, file, cb) {
+            cb(null, file.fieldname + file.mimetype)
+        }
+    });
 
 export class Utils{
 
     public MAX_TOKEN_TIME = 60000;
+    public multer = Multer({storage: storageOptions});
 
     static generateVerificationToken(size: number = 5){
         let digits = '0123456789';
