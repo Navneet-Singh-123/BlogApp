@@ -43,15 +43,15 @@ class UserRouter{
     }
     patchRoutes(){
         this.router.patch('/verify', 
+            GlobalMiddleware.authenticate,
             UserValidators.verifyUser(),
             GlobalMiddleware.checkError,
-            GlobalMiddleware.authenticate,
             UserController.verify
         );
-        this.router.patch('/update/password', 
+        this.router.patch('/update/password',
+            GlobalMiddleware.authenticate, 
             UserValidators.updatePassword(), 
             GlobalMiddleware.checkError, 
-            GlobalMiddleware.authenticate, 
             UserController.updatePassword
         );
         this.router.patch('/reset/password', 
