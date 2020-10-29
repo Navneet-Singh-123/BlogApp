@@ -1,11 +1,7 @@
 import * as mongoose from 'mongoose';
 import {model} from 'mongoose'
 
-const postSchema = new mongoose.Schema({
-    user_id: {
-        type: mongoose.Types.ObjectId, 
-        requried: true
-    }, 
+const commentSchema = new mongoose.Schema({
     created_at: {
         type: Date, 
         required: true
@@ -17,11 +13,7 @@ const postSchema = new mongoose.Schema({
     content: {
         type: String, 
         required: true
-    }, 
-    comments: [{
-        type: mongoose.Types.ObjectId, 
-        ref: 'comments'
-    }]
+    }
 })
 
-export default model('posts', postSchema)
+export default model('comments', commentSchema)
