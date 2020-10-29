@@ -85,4 +85,11 @@ export class PostController{
             next(e);
         }
     }
+
+    static async getPostById(req, res, next){
+        res.json({
+            post: req.post, 
+            commentCount: req.post.commentCount
+        })        
+    }
 }

@@ -24,6 +24,12 @@ class PostRouter{
             GlobalMiddleware.authenticate, 
             PostController.getAllPosts
         )
+        this.router.get('/:id', 
+            GlobalMiddleware.authenticate, 
+            PostValidators.getPostById(),
+            GlobalMiddleware.checkError,
+            PostController.getPostById
+        )
     }
     postRoutes(){
         this.router.post('/add', 
