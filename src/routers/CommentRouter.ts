@@ -32,7 +32,13 @@ class CommentRouter{
         )
     }
     deleteRoutes(){
-        
+        this.router.delete('/delete/:id',
+            GlobalMiddleware.authenticate, 
+            CommentValidators.deleteComment(), 
+            GlobalMiddleware.checkError, 
+            CommentController.deleteComment
+
+        )
     }
 }
 export default new CommentRouter().router;
