@@ -19,4 +19,10 @@ export class CommentValidators{
             })
         ]
     }
+
+    static editComment(){
+        return [
+            body('content', 'Content is Required').isString()
+        ]
+    }
 }

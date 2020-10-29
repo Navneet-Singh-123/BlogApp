@@ -24,7 +24,12 @@ class CommentRouter{
         )
     }
     patchRoutes(){
-        
+        this.router.patch('/edit/:id', 
+            GlobalMiddleware.authenticate,
+            CommentValidators.editComment(), 
+            GlobalMiddleware.checkError, 
+            CommentController.editComment
+        )
     }
     deleteRoutes(){
         
