@@ -15,7 +15,10 @@ class PostRouter{
     }
 
     getRoutes(){
-        
+        this.router.get('/me', 
+            GlobalMiddleware.authenticate, 
+            PostController.getPostByUser
+        )
     }
     postRoutes(){
         this.router.post('/add', 

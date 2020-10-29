@@ -18,4 +18,35 @@ export class PostController{
         }
 
     }
+
+    static async getPostByUser(req, res, next){
+        const userId = req.user.user_id;
+        const page = parseInt(req.query.page) || 1;
+        const perPage = 2;
+        let currentPage = page;
+        let prevPage = page===1 ? null : page-1;
+        let pageToken = page+1;
+        let totalPages;
+        try{
+            const postCount = await Post.countDocuments({user_id: userId});
+            totalPages = Math.ceil(postCount/perPage);
+            if(totalPages === page || totalPages === 0){
+                pageToken = null;
+            }
+            const posts = await Post.find({user_id: userId}, {__v: 0, user_id: 0})
+                                    .populate('comments')
+                                    .skip((perPage*page)-perPage)
+                                    .limit(perPage);
+            res.json({
+                post: posts, 
+                pageToken: pageToken, 
+                totalPages: totalPages, 
+                currentPage: currentPage, 
+                prevPage: prevPage
+            })
+
+        }catch(e){
+            next(e);
+        }
+    }
 }
