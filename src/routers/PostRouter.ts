@@ -1,5 +1,6 @@
 import {Router} from 'express';
 import { PostController } from '../controllers/PostController';
+import { UserController } from '../controllers/UserController';
 import { GlobalMiddleware } from '../middlewares/CheckError';
 import { PostValidators } from '../validators/PostValidators';
 
@@ -18,6 +19,10 @@ class PostRouter{
         this.router.get('/me', 
             GlobalMiddleware.authenticate, 
             PostController.getPostByUser
+        )
+        this.router.get('/all', 
+            GlobalMiddleware.authenticate, 
+            PostController.getAllPosts
         )
     }
     postRoutes(){
