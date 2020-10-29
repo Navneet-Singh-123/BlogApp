@@ -4,6 +4,7 @@ import * as mongoose from 'mongoose';
 
 import { getEnvironmentVariables } from './environments/env';
 import UserRouter from './routers/UserRouter';
+import PostRouter from './routers/PostRouter';
 
 
 export class Server{
@@ -32,7 +33,8 @@ export class Server{
     }
     setRoutes(){
         this.app.use('/src/uploads', express.static('src/uploads'));
-        this.app.use('/api/user', UserRouter)
+        this.app.use('/api/user', UserRouter);
+        this.app.use('/api/post', PostRouter);
     }
     error404Handler(){
         this.app.use((req, res)=>{
