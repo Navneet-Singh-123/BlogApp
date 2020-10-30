@@ -6,6 +6,7 @@ import { getEnvironmentVariables } from './environments/env';
 import UserRouter from './routers/UserRouter';
 import PostRouter from './routers/PostRouter';
 import CommentRouter from './routers/CommentRouter';
+import { Jobs } from './jobs/Jobs';
 
 
 export class Server{
@@ -19,6 +20,7 @@ export class Server{
     setConfigurations(){
         this.setMongodb();
         this.configureBodyParser();
+        Jobs.runRequiredJobs()
     }
     setMongodb(){
         const databaseURL = getEnvironmentVariables().db_url;
