@@ -30,4 +30,21 @@ export class PostValidators{
             body('content', 'Content is Required').isString()
         ]
     }
+
+    static deletePost(){
+        return [
+            param('id')
+            .custom((id, {req})=>{
+                return Post.findOne({_id: id}, {__v: 0, user_id: 0}).then(post=>{
+                    if(post){
+                        req.post = post;
+                        return true;
+                    }
+                    else{
+                        throw new Error('Post Does not Exist');
+                    }
+                })
+            })
+        ]
+    }
 }      

@@ -48,7 +48,12 @@ class PostRouter{
         )
     }
     deleteRoutes(){
-
+        this.router.delete('/delete/:id', 
+            GlobalMiddleware.authenticate,
+            PostValidators.deletePost(), 
+            GlobalMiddleware.checkError, 
+            PostController.deletePost
+        )
     }
 }
 
